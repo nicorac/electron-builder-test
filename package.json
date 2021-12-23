@@ -1,0 +1,71 @@
+{
+  "name": "ngbuilder-test",
+  "version": "0.0.0",
+  "main": "./electron/main.js",
+  "author": "test",
+  "description": "test",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --port=3000",
+    "build": "npm run build-all",
+    "prebuild-all": "node ./build_scripts/prebuild-all-cleanup-dist.js",
+    "build-all": "npm-run-all --sequential build-ng build-electron",
+    "postbuild-all": "node ./build_scripts/postbuild-all-cleanup.js",
+    "build-ng": "ng build --configuration production --aot --build-optimizer --common-chunk --vendor-chunk --optimization --progress",
+    "build-electron": "electron-builder --win --x64",
+    "postbuild-electron": "node ./build_scripts/postbuild-electron.js",
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points"
+  },
+  "build": {
+    "appId": "test",
+    "compression": "normal",
+    "asar": false,
+    "directories": {
+      "output": "./.dist-electron"
+    },
+    "files": [
+      "electron",
+      "!node_modules",
+      {
+        "from": "./.dist-angular",
+        "to": "../ng",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": "dir"
+    }
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "~12.1.0",
+    "@angular/common": "~12.1.0",
+    "@angular/compiler": "~12.1.0",
+    "@angular/core": "~12.1.0",
+    "@angular/forms": "~12.1.0",
+    "@angular/platform-browser": "~12.1.0",
+    "@angular/platform-browser-dynamic": "~12.1.0",
+    "@angular/router": "~12.1.0",
+    "rxjs": "~6.6.0",
+    "tslib": "^2.2.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~12.1.4",
+    "@angular/cli": "~12.1.4",
+    "@angular/compiler-cli": "~12.1.0",
+    "@types/jasmine": "~3.8.0",
+    "@types/node": "^12.11.1",
+    "electron": "^15.3.1",
+    "electron-builder": "^22.13.1",
+    "jasmine-core": "~3.8.0",
+    "karma": "~6.3.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.0.3",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "~1.7.0",
+    "typescript": "~4.3.2"
+  }
+}
